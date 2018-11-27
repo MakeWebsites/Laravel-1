@@ -1,5 +1,5 @@
 <template>
-            <main class="main">
+    <main class="main">
             <!-- Breadcrumb -->
             <ol class="breadcrumb">
                 <li class="breadcrumb-item">Home</li>
@@ -19,11 +19,11 @@
                         <div class="form-group row">
                             <div class="col-md-6">
                                 <div class="input-group">
-                                    <select class="form-control col-md-3" v-model="criterio">
+                                    <select class="form-control col-md-3" id="opcion" name="opcion">
                                       <option value="nombre">Nombre</option>
                                       <option value="descripcion">Descripción</option>
                                     </select>
-                                    <input type="text" v-model="buscar" class="form-control" placeholder="Texto a buscar">
+                                    <input type="text" id="texto" name="texto" class="form-control" placeholder="Texto a buscar">
                                     <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
                                 </div>
                             </div>
@@ -40,16 +40,16 @@
                             <tbody>
                                 <tr v-for="categoria in arrayCategoria" :key="categoria.id">
                                     <td>
-                                        <button type="button" @click="abrirModal('categoria','actualizar',categoria)" class="btn btn-warning btn-sm">
+                                        <button @click="abrirModal('categoria', 'actualizar', categoria)" type="button" class="btn btn-warning btn-sm">
                                           <i class="icon-pencil"></i>
                                         </button> &nbsp;
                                         <template v-if="categoria.condicion">
-                                            <button type="button" class="btn btn-danger btn-sm" @click="desactivarCategoria(categoria.id)">
+                                            <button type="button" class="btn btn-info btn-sm" @click="desactivarCategoria(categoria.id)">
                                                 <i class="icon-trash"></i>
                                             </button>
                                         </template>
                                         <template v-else>
-                                            <button type="button" class="btn btn-info btn-sm" @click="activarCategoria(categoria.id)">
+                                            <button type="button" class="btn btn-danger btn-sm" @click="activarCategoria(categoria.id)">
                                                 <i class="icon-check"></i>
                                             </button>
                                         </template>
@@ -58,26 +58,34 @@
                                     <td v-text="categoria.descripcion"></td>
                                     <td>
                                         <div v-if="categoria.condicion">
-                                            <span class="badge badge-success">Activo</span>
+                                        <span class="badge badge-success">Activo</span>
                                         </div>
                                         <div v-else>
-                                            <span class="badge badge-danger">Desactivado</span>
+                                        <span class="badge badge-danger">Desactivado</span>
                                         </div>
-                                        
                                     </td>
-                                </tr>                                
+                                </tr>
                             </tbody>
                         </table>
                         <nav>
                             <ul class="pagination">
-                                <li class="page-item" v-if="pagination.current_page > 1">
-                                    <a class="page-link" href="#" @click.prevent="cambiarPagina(pagination.current_page - 1)">Ant</a>
+                                <li class="page-item">
+                                    <a class="page-link" href="#">Ant</a>
                                 </li>
-                                <li class="page-item" v-for="page in pagesNumber" :key="page" :class="[page == isActived ? 'active' : '']">
-                                    <a class="page-link" href="#" @click.prevent="cambiarPagina(page)" v-text="page"></a>
+                                <li class="page-item active">
+                                    <a class="page-link" href="#">1</a>
                                 </li>
-                                <li class="page-item" v-if="pagination.current_page < pagination.last_page">
-                                    <a class="page-link" href="#" @click.prevent="cambiarPagina(pagination.current_page + 1)">Sig</a>
+                                <li class="page-item">
+                                    <a class="page-link" href="#">2</a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="#">3</a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="#">4</a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="#">Sig</a>
                                 </li>
                             </ul>
                         </nav>
@@ -91,7 +99,7 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <h4 class="modal-title" v-text="tituloModal"></h4>
-                            <button type="button" class="close" @click="cerrarModal()" aria-label="Close">
+                            <button type="button" @click="cerrarModal()" class="close" aria-label="Close">
                               <span aria-hidden="true">×</span>
                             </button>
                         </div>
@@ -101,23 +109,20 @@
                                     <label class="col-md-3 form-control-label" for="text-input">Nombre</label>
                                     <div class="col-md-9">
                                         <input type="text" v-model="nombre" class="form-control" placeholder="Nombre de categoría">
-                                        
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-md-3 form-control-label" for="email-input">Descripción</label>
+                                     <label class="col-md-3 form-control-label" for="text-input">Descripción</label>
                                     <div class="col-md-9">
-                                        <input type="email" v-model="descripcion" class="form-control" placeholder="Ingrese descripción">
+                                        <input type="text" v-model="descripcion" class="form-control" placeholder="Ingrese descripción">
                                     </div>
                                 </div>
                                 <div v-show="errorCategoria" class="form-group row div-error">
                                     <div class="text-center text-error">
-                                        <div v-for="error in errorMostrarMsjCategoria" :key="error" v-text="error">
-
-                                        </div>
+                                        <div v-for="error in errorMostrarMsjCategoria" :key="error" v-text="error"></div>
                                     </div>
-                                </div>
 
+                                </div>
                             </form>
                         </div>
                         <div class="modal-footer">
@@ -131,14 +136,15 @@
                 <!-- /.modal-dialog -->
             </div>
             <!--Fin del modal-->
+           
         </main>
 </template>
 
 <script>
     export default {
-        data (){
+        data () {
             return {
-                categoria_id: 0,
+                categoria_id : 0,
                 nombre : '',
                 descripcion : '',
                 arrayCategoria : [],
@@ -155,241 +161,236 @@
                     'from' : 0,
                     'to' : 0,
                 },
-                offset : 3,
-                criterio : 'nombre',
-                buscar : ''
-            }
+                offset : 3
+                            }
         },
-        computed:{
-            isActived: function(){
+        computed : {
+            isActivated: function() {
                 return this.pagination.current_page;
             },
-            //Calcula los elementos de la paginación
             pagesNumber: function() {
                 if(!this.pagination.to) {
-                    return [];
+                    return[];
                 }
-                
-                var from = this.pagination.current_page - this.offset; 
-                if(from < 1) {
-                    from = 1;
-                }
-
-                var to = from + (this.offset * 2); 
-                if(to >= this.pagination.last_page){
-                    to = this.pagination.last_page;
-                }  
-
+                var from = this.pagination.current_page - this.offset;
+                    if (from < 1) {
+                        from = 1;
+                        }
+                var to = from + (this.offset * 2);
+                    if (to >= this.pagination.last_page) {
+                        to = this.pagination.last_page;
+                    }
                 var pagesArray = [];
-                while(from <= to) {
+                while (from <= to) {
                     pagesArray.push(from);
-                    from++;
+                    from ++;
                 }
-                return pagesArray;             
-
+                return pagesArray;
             }
         },
         methods : {
-            listarCategoria (page){
-                let me=this;
-                var url= '/categoria?page=' + page;
+            listarCategoria(page) {
+                let me = this;
+                var url = '/categoria?page=' + page;
                 axios.get(url).then(function (response) {
-                    var respuesta= response.data;
-                    me.arrayCategoria = respuesta.categorias.data;
-                    me.pagination= respuesta.pagination;
+                    me.arrayCategoria = response.data;
+                    })
+                .catch(function (error) {
+                    console.log(error);
+                    });
+            },
+            cambiarPagina (page) {
+                let me = this;
+                me.pagination.current_page = page;
+                me.listarCategoria(page);
+            },
+            registrarCategoria() {
+                if(this.validarCategoria()) {
+                    return;
+                }
+                let me = this;
+                axios.post('/categoria/registrar', {
+                    'nombre' : this.nombre,
+                    'descripcion' : this.descripcion
+                }).then(function (response) {
+                    me.cerrarModal();
+                    me.listarCategoria()
                 })
                 .catch(function (error) {
                     console.log(error);
                 });
             },
-            cambiarPagina(page){
-                let me = this;
-                //Actualiza la página actual
-                me.pagination.current_page = page;
-                //Envia la petición para visualizar la data de esa página
-                me.listarCategoria(page);
-            },
-            registrarCategoria(){
-                if (this.validarCategoria()){
+            actualizarCategoria() {
+                if(this.validarCategoria()) {
                     return;
                 }
-                
                 let me = this;
-
-                axios.post('/categoria/registrar',{
-                    'nombre': this.nombre,
-                    'descripcion': this.descripcion
+                axios.put('/categoria/actualizar', {
+                    'nombre' : this.nombre,
+                    'descripcion' : this.descripcion,
+                    'id' : this.categoria_id
                 }).then(function (response) {
                     me.cerrarModal();
-                    me.listarCategoria();
-                }).catch(function (error) {
+                    me.listarCategoria()
+                })
+                .catch(function (error) {
                     console.log(error);
                 });
-            },
-            actualizarCategoria(){
-               if (this.validarCategoria()){
-                    return;
-                }
-                
-                let me = this;
 
-                axios.put('/categoria/actualizar',{
-                    'nombre': this.nombre,
-                    'descripcion': this.descripcion,
-                    'id': this.categoria_id
-                }).then(function (response) {
-                    me.cerrarModal();
-                    me.listarCategoria();
-                }).catch(function (error) {
+            },
+            desactivarCategoria(id) {
+                const swalWithBootstrapButtons = swal.mixin({
+                confirmButtonClass: 'btn btn-success',
+                cancelButtonClass: 'btn btn-danger',
+                buttonsStyling: false,
+                })
+
+                swalWithBootstrapButtons({
+                title: '¿Está seguro?',
+                //text: "Esta acción no puede revertirse",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Aceptar',
+                cancelButtonText: 'Cancelar',
+                reverseButtons: true
+                }).then((result) => {
+                if (result.value) {
+                    let me = this;
+                    axios.put('/categoria/desactivar', {
+                        'id' : id
+                    }).then(function (response) {
+                        me.listarCategoria();
+                        swalWithBootstrapButtons(
+                        'Hecho!',
+                        'La categoría ha sido desactivada.',
+                        'success'
+                     )
+                    })
+                .catch(function (error) {
                     console.log(error);
-                }); 
-            },
-            desactivarCategoria(id){
-               swal({
-                title: 'Esta seguro de desactivar esta categoría?',
-                type: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Aceptar!',
-                cancelButtonText: 'Cancelar',
-                confirmButtonClass: 'btn btn-success',
-                cancelButtonClass: 'btn btn-danger',
-                buttonsStyling: false,
-                reverseButtons: true
-                }).then((result) => {
-                if (result.value) {
-                    let me = this;
-
-                    axios.put('/categoria/desactivar',{
-                        'id': id
-                    }).then(function (response) {
-                        me.listarCategoria();
-                        swal(
-                        'Desactivado!',
-                        'El registro ha sido desactivado con éxito.',
-                        'success'
-                        )
-                    }).catch(function (error) {
-                        console.log(error);
-                    });
-                    
+                });
                     
                 } else if (
                     // Read more about handling dismissals
                     result.dismiss === swal.DismissReason.cancel
                 ) {
-                    
+                    /*swalWithBootstrapButtons(
+                    'Cancelled',
+                    'Your imaginary file is safe :)',
+                    'error'
+                    )*/
                 }
-                }) 
+                })
             },
-            activarCategoria(id){
-               swal({
-                title: 'Esta seguro de activar esta categoría?',
-                type: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Aceptar!',
-                cancelButtonText: 'Cancelar',
+            activarCategoria(id) {
+                const swalWithBootstrapButtons = swal.mixin({
                 confirmButtonClass: 'btn btn-success',
                 cancelButtonClass: 'btn btn-danger',
                 buttonsStyling: false,
+                })
+
+                swalWithBootstrapButtons({
+                title: 'Se activará nuevamente la categoría',
+                //text: "Esta acción no puede revertirse",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Aceptar',
+                cancelButtonText: 'Cancelar',
                 reverseButtons: true
                 }).then((result) => {
                 if (result.value) {
                     let me = this;
-
-                    axios.put('/categoria/activar',{
-                        'id': id
+                    axios.put('/categoria/activar', {
+                        'id' : id
                     }).then(function (response) {
                         me.listarCategoria();
-                        swal(
-                        'Activado!',
-                        'El registro ha sido activado con éxito.',
+                        swalWithBootstrapButtons(
+                        'Hecho!',
+                        'La categoría ha sido activada.',
                         'success'
-                        )
-                    }).catch(function (error) {
-                        console.log(error);
-                    });
-                    
+                     )
+                    })
+                .catch(function (error) {
+                    console.log(error);
+                });
                     
                 } else if (
                     // Read more about handling dismissals
                     result.dismiss === swal.DismissReason.cancel
                 ) {
-                    
+                    /*swalWithBootstrapButtons(
+                    'Cancelled',
+                    'Your imaginary file is safe :)',
+                    'error'
+                    )*/
                 }
-                }) 
+                })
             },
-            validarCategoria(){
+            validarCategoria() {
                 this.errorCategoria=0;
                 this.errorMostrarMsjCategoria =[];
-
-                if (!this.nombre) this.errorMostrarMsjCategoria.push("El nombre de la categoría no puede estar vacío.");
-
-                if (this.errorMostrarMsjCategoria.length) this.errorCategoria = 1;
-
+                if(!this.nombre) this.errorMostrarMsjCategoria.push("El nombre de la Categoría no puede estar vacío");
+                if(this.errorMostrarMsjCategoria.length) this.errorCategoria = 1;
                 return this.errorCategoria;
             },
-            cerrarModal(){
-                this.modal=0;
-                this.tituloModal='';
-                this.nombre='';
-                this.descripcion='';
-            },
-            abrirModal(modelo, accion, data = []){
-                switch(modelo){
-                    case "categoria":
-                    {
-                        switch(accion){
-                            case 'registrar':
-                            {
+            
+            abrirModal(modelo, accion, data = []) {
+                switch (modelo) {
+                    case "categoria": {
+                        switch(accion) {
+                            case "registrar": {
                                 this.modal = 1;
-                                this.tituloModal = 'Registrar Categoría';
-                                this.nombre= '';
+                                this.tituloModal = 'Registro de Categoria';
+                                this.nombre = '';
                                 this.descripcion = '';
                                 this.tipoAccion = 1;
                                 break;
                             }
-                            case 'actualizar':
-                            {
+                            case "actualizar": {
                                 //console.log(data);
-                                this.modal=1;
-                                this.tituloModal='Actualizar categoría';
-                                this.tipoAccion=2;
-                                this.categoria_id=data['id'];
+                                this.modal = 1;
+                                this.tituloModal = 'Actualizar Categoría';
+                                this.tipoAccion = 2;
+                                this.categoria_id = data['id'];
                                 this.nombre = data['nombre'];
-                                this.descripcion= data['descripcion'];
+                                this.descripcion = data['descripcion'];
                                 break;
                             }
+
                         }
+
                     }
                 }
-            }
+
+            },
+            cerrarModal() {
+                this.modal = 0;
+                this.tituloModal = '';
+                this.nombre = '';
+                this.descripcion = '';
+                this.tipoAccion = 0;
+            } 
         },
         mounted() {
             this.listarCategoria();
         }
     }
 </script>
-<style>    
-    .modal-content{
-        width: 100% !important;
-        position: absolute !important;
-    }
-    .mostrar{
-        display: list-item !important;
-        opacity: 1 !important;
-        position: absolute !important;
-        background-color: #3c29297a !important;
-    }
-    .div-error{
-        display: flex;
-        justify-content: center;
-    }
-    .text-error{
-        color: red !important;
-        font-weight: bold;
-    }
+<style>
+.modal-content {
+    width: 100% !important;
+    position: absolute !important; }
+.mostrar {
+    display: list-item !important;
+    opacity: 1 !important;
+    position: absolute !important;
+    background-color: #3c29297a !important; }
+.div-error {
+    display: flex;
+    justify-content: center;
+}
+.text-error {
+    color: red !important;
+    font-weight: bold;
+}
 </style>
